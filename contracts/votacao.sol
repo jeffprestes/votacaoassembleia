@@ -13,7 +13,7 @@ contract Assembleia {
     //Informações gerais da Assembleia
     Proposta[] propostas;
    
-    function incluiProposta(string qualTextoDaProposta, address qualProponente, uint qualQuotaMinimaParaAprovacao) public somenteChairman {
+    function incluiProposta(string qualTextoDaProposta, address qualProponente, uint qualQuotaMinimaParaAprovacao) public  {
         Proposta memory novaProposta = Proposta(qualTextoDaProposta, qualProponente, 0, qualQuotaMinimaParaAprovacao, true);
         propostas.push(novaProposta);
     }
