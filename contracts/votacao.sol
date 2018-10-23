@@ -33,6 +33,7 @@ contract Assembleia {
     constructor (string qualMotivoConvocatoria, uint qualDataFimVotacao) public {
         chairman = msg.sender;
         dataFimVotacao = qualDataFimVotacao;
+        dataInicioVotacao = now;
         motivoConvocatoria = qualMotivoConvocatoria;
     }
 
@@ -85,6 +86,10 @@ contract Assembleia {
 
     function quandoEncerraVotacao() public view returns (uint) {
         return dataFimVotacao;
+    }
+
+    function detalhesAssembleia() public view returns(address, string, uint, uint, uint) {
+        return (chairman, motivoConvocatoria, dataInicioVotacao, dataFimVotacao, totalDePropostas());
     }
 
     function votar(uint numeroProposta, bool favoravelAProposta) public returns (bool) {
