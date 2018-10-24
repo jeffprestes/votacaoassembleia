@@ -32,6 +32,9 @@ contract VotacaoAssembleia {
         _;
     }
 
+    //Evento a ser disparado quando um votante definiu seu voto
+    event Votou(address quemVotou, uint propostaVotada, bool qualVoto);
+
     //Informações gerais da Assembleia
     Proposta[] propostas;
     mapping (address =>Votante) votantes;
@@ -239,6 +242,7 @@ contract VotacaoAssembleia {
                     if (favoravelAProposta == true) {
                         propostaTemporario.quotaDeVotos = propostaTemporario.quotaDeVotos + votanteTemporario.quotaDeVotos;
                     }
+                    emit Votou(msg.sender, numeroProposta, favoravelAProposta);
                     votanteTemporario.votou = true;
                     return true;
                 } 
