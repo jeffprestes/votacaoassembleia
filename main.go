@@ -15,13 +15,10 @@ import (
 )
 
 func main() {
-	//Connect to mainnet
 	client, err := ethclient.Dial("https://rinkeby.infura.io")
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	//Input address of 0x v1 contract and build event query
 	contractAddress := common.HexToAddress("0x771fd37069b93bf0e41142712426d8046568897a")
 	contract, err := proxycontracts.NewVotacaoAssembleia(contractAddress, client)
 	if err != nil {
@@ -35,16 +32,17 @@ func main() {
 		log.Fatal(err)
 	}
 	var eventLog proxycontracts.VotacaoAssembleiaVotou
-
 	for logs.Next() {
 		eventLog = *logs.Event
 		descricaoProposta, proponente, _, _, err := contract.PesquisarProposta(nil, eventLog.PropostaVotada)
 		if err != nil {
-			log.Fatal(err)
+			log.Printf("Erro ao pesquisar os detalhes da proposta: %s\n", err.Error())
+			continue
 		}
 		propostaAprovada, err := contract.PropostaAprovada(nil, eventLog.PropostaVotada)
 		if err != nil {
-			log.Fatal(err)
+			log.Printf("Erro ao checar se a proposta foi aprovada: %s\n", err.Error())
+			continue
 		}
 		fmt.Println(geraSinteseVoto(descricaoProposta, proponente, eventLog.QuemVotou, eventLog.QualVoto, propostaAprovada))
 	}
