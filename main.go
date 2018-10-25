@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
+	"github.com/jung-kurt/gofpdf"
 
 	"github.com/jeffprestes/votacaoassembleia/proxycontracts"
 
@@ -17,20 +18,26 @@ import (
 func main() {
 	client, err := ethclient.Dial("https://rinkeby.infura.io")
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Erro ao conectar ao nó do Ethereum: %s\n", err.Error())
 	}
 	contractAddress := common.HexToAddress("0x771fd37069b93bf0e41142712426d8046568897a")
 	contract, err := proxycontracts.NewVotacaoAssembleia(contractAddress, client)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Erro ao gerar um proxy do Smart Contract: %s\n", err.Error())
 	}
 	filterer := new(bind.FilterOpts)
 	filterer.Start = 3224024
 	filterer.End = nil
 	logs, err := contract.FilterVotou(filterer)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Erro ao obter os logs dos eventos: %s\n", err.Error())
 	}
+
+	pdf := gofpdf.New("P", "mm", "A4", "")
+	pdf.AddPage()
+	pdf.SetFont("Arial", "B", 10)
+	pdf.SetLeftMargin(10)
+
 	var eventLog proxycontracts.VotacaoAssembleiaVotou
 	for logs.Next() {
 		eventLog = *logs.Event
@@ -44,18 +51,24 @@ func main() {
 			log.Printf("Erro ao checar se a proposta foi aprovada: %s\n", err.Error())
 			continue
 		}
-		fmt.Println(geraSinteseVoto(descricaoProposta, proponente, eventLog.QuemVotou, eventLog.QualVoto, propostaAprovada))
+		geraSinteseVoto(pdf, descricaoProposta, proponente, eventLog.QuemVotou, eventLog.QualVoto, propostaAprovada)
+	}
+	err = pdf.OutputFileAndClose("ata_votacao_assembleia.pdf")
+	if err != nil {
+		log.Fatalf("Erro gerar o arquivo da Ata: %s\n", err.Error())
 	}
 }
 
-func geraSinteseVoto(descricaoProposta string, proponente common.Address, quemVotou common.Address, qualVoto bool, aPropostaFoiAprovada bool) (voto string) {
+func geraSinteseVoto(pdf *gofpdf.Fpdf, descricaoProposta string, proponente common.Address, quemVotou common.Address, qualVoto bool, aPropostaFoiAprovada bool) {
 	var sinteseVoto strings.Builder
 	sinteseVoto.WriteString("Proposta: ")
 	sinteseVoto.WriteString(descricaoProposta)
 	sinteseVoto.WriteString(" - ")
 	sinteseVoto.WriteString("Proponente: ")
 	sinteseVoto.WriteString(proponente.String())
-	sinteseVoto.WriteString(" - ")
+	pdf.CellFormat(200, 10, sinteseVoto.String(), "", 1, "C", false, 0, "")
+	fmt.Println(sinteseVoto.String())
+	sinteseVoto.Reset()
 	sinteseVoto.WriteString("Votante: ")
 	sinteseVoto.WriteString(quemVotou.String())
 	sinteseVoto.WriteString(" - ")
@@ -64,6 +77,7 @@ func geraSinteseVoto(descricaoProposta string, proponente common.Address, quemVo
 	sinteseVoto.WriteString(" - ")
 	sinteseVoto.WriteString("A proposta foi aprovada? ")
 	sinteseVoto.WriteString(strconv.FormatBool(aPropostaFoiAprovada))
-	voto = sinteseVoto.String()
+	pdf.CellFormat(200, 10, sinteseVoto.String(), "", 1, "C", false, 0, "")
+	fmt.Println(sinteseVoto.String())
 	return
 }
