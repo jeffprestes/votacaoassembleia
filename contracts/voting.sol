@@ -60,190 +60,188 @@ contract Voting {
     @param Designatedsecretary - Ethereum address of the Secretary 
     */
     function Designatesecretary(address Designatedsecretary) public somentePresidente {
-        secretario = secretarioDesignado;
+        secretary = designateSecretary;
     }
 
     /** 
-    @notice Presidente da Assembleia define quando a votação se encerrará
-    @param qualDataFimVotacao - A data e hora limite para votação
-                                Em formato Unix timestamp - A data Numero de segundos decorridos desde 1 janeiro de 1970. 
-                                Formato usado amplamente no ambiente de programação. Para converter em data atual pode-se usar:
+    @notice The designated president defines when voting ends
+    @param endingVotingDate - the date and hour limit for voting
+                                In Unix timestamp format - The Date and Number of seconds elapsed since January 1, 1970.
+                                Format widely used in the programming environment. To convert to current date you can use:
     https://www.unixtimestamp.com/index.php
     */
-    function definirFimVotacao(uint qualDataFimVotacao) public somentePresidente {
-        require(qualDataFimVotacao > now, "A data informada deve ser maior que a atual");
-        dataFimVotacao = qualDataFimVotacao;
+    function defineEndOfVoting(uint endingVotingDate) public presidentOnly {
+        require(whichEndOfVotingDate > now, "The date defined must be larger than the current date");
+        endOfVotingDate = whichEndOfVotingDate;
     }
 
     /** 
-    @notice Presidente da Assembleia define quando a votação se iniciará
-    @param qualDataInicioVotacao - A data e hora para inicio para votação
-                                Em formato Unix timestamp - A data Numero de segundos decorridos desde 1 janeiro de 1970. 
-                                Formato usado amplamente no ambiente de programação. Para converter em data atual pode-se usar:
+    @notice Designated presidnt will define when voting will begin
+    @param whichBegginingOfVotingDate - The date and hour voting will begin
+                               In Unix timestamp format - The Date and Number of seconds elapsed since January 1, 1970.
+                                Format widely used in the programming environment. To convert to current date you can use:
     https://www.unixtimestamp.com/index.php
     */
-    function definirInicioVotacao(uint qualDataInicioVotacao) public somentePresidente {
-        require(qualDataInicioVotacao > now, "A data informada deve ser maior que a atual");
-        dataInicioVotacao = qualDataInicioVotacao;
+    function defineWhenVotingBegins(uint whichBegginingOfVotingDate) public presidentOnly {
+        require(whichBegginingOfVotingDate > now, "The date defined must be larger than the current date");
+       begginingOfVotingDate = whichBegginingOfVotingDate;
     }
 
     /** 
-    @notice função a ser utilizado somente pelo Secretário para incluir um novo participante apto a votar (votante)
-    @param enderecoVotante - Endereço Ethereum da conta do votante
-    @param quotaDeVotos - Quantidade de votos (ou percentual de ações/participações) que possuí o votante
+    @notice function to be used only by the Secretary to include a new eligible voter (voter)
+    @param enderecoVotante - Ethereum address of the voters account
+    @param quotaOfVotes - Quantity of votes (or the percentage of owenership) possesed by the voter
     */
-    function incluiVotante(address enderecoVotante, uint quotaDeVotos) public somenteSecretario {
-        require(quotaDeVotos <= 99, "Quota nao pode ser superior a 99%");
-        require(enderecoVotante != address(0), "O votante deve ter um endereco valido");
-        Votante memory novoVotante = Votante(enderecoVotante, quotaDeVotos, false, true);
-        votantes[enderecoVotante] = novoVotante;
-        numeroVotantes.push(novoVotante);
+    function includeVoter(address voterAddress, uint quotaOfVotes) public secretaryOnly {
+        require(quotaOfVotess <= 99, "Quota can not be greater than 99%");
+        require(voterAddress != address(0), "The voter must have a valid address");
+        Voter memory newVoter = Voter(voterAddress, quotaOfVotes, false, true);
+        Voters[voterAddress] = newVoter;
+        numberOfVoters.push(newVoter);
     }
 
     /** 
-    @notice função a ser utilizado somente pelo Secretário para incluir uma nova proposta a ser apreciada (votada) pela Assembleia
-    @param qualTextoDaProposta - Texto da proposta a ser apreciada
-    @param qualProponente - Endereço Ethereum da conta do membro da Assembleia que trouxe a proposta a votação
-    @param qualQuotaMinimaParaAprovacao -   Quantidade de votos (ou percentual de ações/participações) mínima que por estatuto/contrato a 
-                                            proposta deve receber para ser aprovada
+    @notice only to be used by the Secretary to include a new proposal to be considered (voted on) by the Assembly
+    @param whichProposalText - Text of the proposal to be considered
+    @param whichProponent - Ethereum address of the member's account that brought the proposal to a vote
+    @param whichQuotaIsTheMinimumForApproval -   Quantity of votes (or the percentage of owenership) minimum a proposal must receive for a statute / contract to be approved
     */
-    function incluiProposta(string qualTextoDaProposta, address qualProponente, uint qualQuotaMinimaParaAprovacao) public somenteSecretario {
-        Proposta memory novaProposta = Proposta(qualTextoDaProposta, qualProponente, 0, qualQuotaMinimaParaAprovacao, true);
-        propostas.push(novaProposta);
+    function includeProposal(string whichProposalText, address whichProponent, uint whichQuotaIsTheMinimumForApproval) public secretaryOnly {
+        Proposal memory newProposal = Proposal(whichProposalText, whichProponent, 0, whichQuotaIsTheMinimumForApproval, true);
+        proposals.push(newProposal);
     }
     
 
     /** 
-    @notice função a ser usada para obter na prática o número de votos (ou percentual de ações/participações) de um votante
-    @param indiceVotante - Endereço Ethereum da conta do votante
-    @return Endereço Ethereum da conta do votante
-    @return Número de votos (ou percentual de ações/participações) do votante
+    @notice function to be used to obtain the number of votes (or percentage of shares) of the voter
+    @param voterIndex - Ethereum address of the voter
+    @return Ethereum address of the voter
+    @return number of votes (or percentage of shares) of the voter
     */
-    function pesquisarVotante(address indiceVotante) public view returns (address, uint) {
-        Votante memory votanteTemporario = votantes[indiceVotante];
-        if (votanteTemporario.existe == true) {
-            return (votanteTemporario.conta, votanteTemporario.quotaDeVotos);
+    function searchVoter(address voterIndex) public view returns (address, uint) {
+        Voter memory temporaryVoter = votantes[indiceVotante];
+        if (temporaryVoter.exists == true) {
+            return (temporaryVoter.address, temporaryVoter.quotaOfVotes);
         } else {
             return (0,0);
         }
     }
 
     /** 
-    @notice função a ser usada para obter na prática o número de votos (ou percentual de ações/participações) de um votante
-    @param indiceVotante - Número inteiro e único que identifica o votante
-    @return Endereço Ethereum da conta do votante
-    @return Número de votos (ou percentual de ações/participações) do votante
+    @notice function to be used to obtain the number of votes (or percentage of shares) of the voter
+    @param voterIndex - Unique voter identification number
+    @return Ethereum address of the voter
+    @return number of votes (or percentage of shares) of the voter
     */
-    function pesquisarVotantePorIndice(uint indiceVotante) public view returns (address, uint) {
-        require(indiceVotante <= numeroVotantes.length, "Indice informado é maior que o numero de votantes");
-        Votante memory votanteTemporario = numeroVotantes[indiceVotante];
-        if (votanteTemporario.existe == true) {
-            return (votanteTemporario.conta, votanteTemporario.quotaDeVotos);
+    function searchVoterByIndex(uint voterIndex) public view returns (address, uint) {
+        require(voterIndex <= numberOfVoters.length, "Index listed is larger than number of voters");
+        Voter memory temporaryVoter = numberOfVotes[voterIndex];
+        if (temporaryVoter.exists == true) {
+            return (temporaryVoter.address, temporaryVoter.quotaOfVotes);
         } else {
             return (0,0);
         }
     }
 
     /** 
-    @notice função a ser usada para obter detalhes de uma proposta a ser apreciada (votada) na Assembleia
-    @param numeroProposta - Número inteiro e único que identifica a proposta
-    @return Texto da proposta
-    @return Endereço Ethereum da conta do proponente
-    @return Número de votos (ou percentual de ações/participações) de apoio recebido
-    @return Número de votos (ou percentual de ações/participações) de apoio mínimo que a proposta necessita para ser aprovada
+    @notice function to be used to obtain details of a proposal to be considered (voted on) 
+    @param proposalNumber - Unique proposal identification number
+    @return Text of proposal
+    @return Ethereum address of the proponent
+    @return Number of votes (or percentage of shares) received supporting the proposal
+    @return Number of votes (or percentage of shares)  needed for the proposal to be approved
     */
-    function pesquisarProposta(uint numeroProposta) public view returns (string, address, uint, uint)  {
-        Proposta memory propostaTemporario = propostas[numeroProposta];
-        if (propostaTemporario.existe) {
-            return (propostaTemporario.texto, propostaTemporario.proponente, propostaTemporario.quotaDeVotos, propostaTemporario.quotaMinimaParaAprovacao);
+    function searchProposal(uint numeroProposta) public view returns (string, address, uint, uint)  {
+        Proposal memory temporaryproposal = proposals[numberProposal];
+        if (temporaryproposal.exists) {
+            return (temporaryproposal.text, temporaryproposal.proponent, temporaryproposal.quotaOfVotes, temporaryproposal.quotaMinimumForApproval);
         } else {
             return ("", 0, 0, 0);
         }
     }
 
     /** 
-    @notice Total de propostas registradas na Assembléia
-    @return Numero total de propostas registradas na Assembléia
+    @notice Total of registered proposals
+    @return Total number of registered proposals
     */
-    function totalDePropostas() public view returns (uint) {
-        return propostas.length;
+    function totalOfProposals() public view returns (uint) {
+        return proposals.length;
     }
 
     /** 
-    @notice Total de participantes aptos a votar (votantes) registradas na Assembléia
-    @return Numero total de participantes aptos a votar (votantes) registradas na Assembléia
+    @notice Total participants eligible to vote (voters) registered in the Assembly
+    @return Total number of participants eligible to vote (voters) registered in the Assembly
     */
-    function totalDeVotantes() public view returns (uint) {
-        return numeroVotantes.length;
+    function totalOfVoters() public view returns (uint) {
+        return numberOfVoters.length;
     }
 
     /** 
-    @notice Qual o motivo razão da Assembléia ter sido convocada
-    @return Texto que explica o motivo razão da Assembléia ter sido convocada
+    @notice What is the reason the meeting was called
+    @return Text explaining why the meeting was called
     */
-    function qualMotivoDaConvocatoria() public view returns (string) {
-        return motivoConvocatoria;
+    function whatIsTheReasonForMeeting() public view returns (string) {
+        return reasonForMeeting;
     }
 
     /** 
-    @notice Informa se a proposta foi aprovada ou não
-    @return Verdadeiro (true) caso a proposta tenha recebidos votos (ou percentual de ações/participações) de apoio mínimo 
-            para ser considerada aprovada
+    @notice Inform if the proposal was approved or not
+    @return True if the proposal received the minimum number of votes (or percentage of shares) to be considered approved
     */
-    function propostaAprovada(uint numeroProposta) public view returns (bool)  {
-        Proposta memory propostaTemporario = propostas[numeroProposta];
+    function proposalApproved(uint proposalNumber) public view returns (bool)  {
+        Proposal memory temporaryProposal = proposals[proposalNumber];
         if (propostaTemporario.existe) {
-            return propostaTemporario.quotaDeVotos>=propostaTemporario.quotaMinimaParaAprovacao;
+            return temporaryProposal.quotaOfVotes>=temporaryProposal.quotaMinimumForApproval;
         } else {
             return false;
         }
     }
 
     /** 
-    @notice Informa quando a votação se encerrará
-    @return Unix timestamp de quando a votação será encerrada
+    @notice Inform when voting has ended
+    @return Unix timestamp of when the voting ended
     */
-    function quandoEncerraVotacao() public view returns (uint) {
-        return dataFimVotacao;
+    function endOfVotingDate() public view returns (uint) {
+        return endOfVotingDate;
     }
 
     /** 
-    @notice Traz um resumo da Assembleia
-    @return Endereço Ethereum da conta do presidente da Assembleia
-    @return Endereço Ethereum da conta do secretário da Assembleia
-    @return Texto que explica o motivo razão da Assembléia ter sido convocada
-    @return Quando a votação abriu (formato Unix timestamp) - para converter acesse: https://www.unixtimestamp.com/index.php
-    @return Quando a votação será ou foi encerrada (formato Unix timestamp) - para converter acesse: https://www.unixtimestamp.com/index.php
-    @return Total de propostas enviadas para apreciação
-    @return Total de votantes aptos a votar
+    @notice Summary of the Assembly
+    @return Ethereum address of the president
+    @return Ethereum address of the secretary
+    @return Text explaining why the meeting was called
+    @return When the vote opened(format Unix timestamp) - To convert: https://www.unixtimestamp.com/index.php
+    @return When the vote has or will end (format Unix timestamp) - To convert: https://www.unixtimestamp.com/index.php
+    @return Total number of proposals submitted for consideration
+    @return Total eligible voters
     */
-    function detalhesAssembleia() public view returns(address, address, string, uint, uint, uint, uint) {
-        uint tPropostas = totalDePropostas();
-        uint tVotantes = totalDeVotantes();
-        return (presidente, secretario, motivoConvocatoria, dataInicioVotacao, dataFimVotacao, tPropostas, tVotantes);
+    function meetingDetails() public view returns(address, address, string, uint, uint, uint, uint) {
+        uint tProposals = totalOfProposals();
+        uint tVoters = totalNumberOfVoters();
+        return (president, secretary, reasonForTheMeeting, begginingOfVotingDate, endOfVotingDate, tProposals, tVoters);
     }
 
     /** 
-    @notice função a ser executada pelos votantes para registrar se aprovam ou não uma proposta
-            A votação deve estar aberta para ser permitida
-            Um votante só tem permissão de votar uma vez e o voto não pode ser alterado.
-    @param numeroProposta - Numero identificador da proposta
-    @param favoravelAProposta - Verdadeiro/Falso onde o votante expressa se aprova ou não a proposta
-    @return Verdadeiro caso o voto tenha sido computado com sucesso
+    @notice to be performed by voters to register whether or not they approve a proposal
+           Voting must be open to permit
+            A voter is only allowed to vote once and the vote can not be changed.
+    @param proposalNumber - Unique proposal identification number
+    @param inFavorOfTheProposal - True / False where the voter expresses whether or not he approves the proposal
+    @return True if the vote was successfully computed
     */
-    function votar(uint numeroProposta, bool favoravelAProposta) public returns (bool) {
-        require(dataFimVotacao>=now, "Votacao encerrada");
-        require(dataInicioVotacao<=now, "Votação ainda não foi aberta");
-        Proposta storage propostaTemporario = propostas[numeroProposta];
-        if (propostaTemporario.existe) {
-            Votante storage votanteTemporario = votantes[msg.sender];
+    function vote(uint proposalNumber, bool inFavorOfTheProposal) public returns (bool) {
+        require(endOfVotingDate>=now, "Voting ended");
+        require(begginingOfVotingDate<=now, "Voting is not open yet");
+        Proposal storage temporaryProposal = proposals[proposalNumber];
+        if (temporaryProposal.exists) {
+            Voter storage temporaryVoter = voters[msg.sender];
             if (votanteTemporario.existe == true) {
                 if (votanteTemporario.votou == false) {
                     if (favoravelAProposta == true) {
-                        propostaTemporario.quotaDeVotos = propostaTemporario.quotaDeVotos + votanteTemporario.quotaDeVotos;
+                        temporaryProposal.quotaOfvotes = temporaryProposal.quotaOfVotes + temporaryVoter.quotaOfVotes;
                     }
-                    emit Votou(msg.sender, numeroProposta, favoravelAProposta);
-                    votanteTemporario.votou = true;
+                    emit Voted(msg.sender, proposalNumber, inFavorOfTheProposal);
+                    temporaryVoter.voted = true;
                     return true;
                 } 
             } 
