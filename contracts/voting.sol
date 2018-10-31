@@ -1,65 +1,65 @@
 pragma  solidity 0.4.25;
 
 /**
-@title VotacaoAssembleia
-@notice Contrato Inteligente para armazenar a votação de uma Assembleia
+@title Voting
+@notice Smart contract to store voting results
 @author Jeff Prestes
 */
-contract VotacaoAssembleia {
+contract Voting {
 
-    struct Proposta {
-        string texto;
-        address proponente;
-        uint quotaDeVotos;
-        uint quotaMinimaParaAprovacao;
-        bool existe;
+    struct Proposal {
+        string text;
+        address proponent;
+        uint quotaOfVotes;
+        uint quotaMinimumForApproval;
+        bool exists;
     }
 
-    struct Votante {
-        address conta;
-        uint quotaDeVotos;
-        bool votou;
-        bool existe;
+    struct Voter {
+        address account;
+        uint quotaOfVotes;
+        bool voted;
+        bool exists;
     }
 
-    modifier somenteSecretario() {
-        require(secretario == msg.sender, "Só o secretário pode realizar essa operação");
+    modifier secretaryOnly() {
+        require(secretary == msg.sender, "Only the secretary can carry out this operation");
         _;
     }
 
-    modifier somentePresidente() {
-        require(presidente == msg.sender, "Somente o presidente pode realizar essa operação");
+    modifier presidentOnly() {
+        require(president == msg.sender, "Only the president can carry out this operation");
         _;
     }
 
-    //Evento a ser disparado quando um votante definiu seu voto
-    event Votou(address quemVotou, uint propostaVotada, bool qualVoto);
+    //Event to be discharged when a voter has defined his or her vote
+    event Voted(address whoVoted, uint proposalVoted, bool whichVote);
 
-    //Informações gerais da Assembleia
-    Proposta[] propostas;
-    mapping (address =>Votante) votantes;
-    Votante[] numeroVotantes;
-    address secretario;
-    address presidente;
-    uint dataInicioVotacao;
-    uint dataFimVotacao;
-    string motivoConvocatoria;
+    //General information
+    Proposal[] proposals;
+    mapping (address =>Voter) voters;
+    Voter[] numberOFVoters;
+    address secretary;
+    address president;
+    uint startinglVotingDate;
+    uint endingVotingDate;
+    string reasonForInvitation;
 
     /**
-    @notice A pessoa que presidirá a Assembléia deve registrar o Smart Contract
-    @dev Cria um contrato específico para uma Assembleia. O presidente designado é quem registrou o Smart Contract na rede
-    @param qualMotivoConvocatoria - O presidente da Assembléia escreve o motivo da convocatória da Assembléia
+    @notice The person who will preside over the voting must register the Smart Contract
+    @dev Creates a specific contract for a vote. The designated president is the one who registered the Smart Contract on the network
+    @param reasonForInvitation - The designated president writes the reason for the vote
     */
-    constructor (string qualMotivoConvocatoria) public {
-        presidente = msg.sender;
-        motivoConvocatoria = qualMotivoConvocatoria;
+    constructor (string reasonForInvitation) public {
+        president = msg.sender;
+        reasonForInvitation = whatIsTheReason;
     }
 
     /**
-    @notice O Presidente da Assembléia designa um secretário que irá registrar as propostas e os aptos a votar (votantes)
-    @param secretarioDesignado - Endereço Ethereum da conta do Secretário da Assembléia
+    @notice The President of the Assembly appoints a secretary who will register the proposals and the eligible voters
+    @param Designatedsecretary - Ethereum address of the Secretary 
     */
-    function designarSecretario(address secretarioDesignado) public somentePresidente {
+    function Designatesecretary(address Designatedsecretary) public somentePresidente {
         secretario = secretarioDesignado;
     }
 
