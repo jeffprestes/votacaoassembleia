@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Votação de Assembleia - Página para serviço do Presidente da Assembleia</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Votação de Assembleia</h1>
+        <h2>Página para serviço do Presidente da Assembleia</h2>
+        <h5>Conectado ao Smart Contract? <span id="conectado">Não</span></h5>
+        <br>
+        <form action="#" id="frmSecretario" name="frmSecretario" class="form-inline">
+            <div class="form-group">
+                <label for="secretario">Secretário: &nbsp;</label>
+                <input type="text" name="secretario" id="secretario" size="48">
+            </div>
+            &nbsp;
+            <button type="submit" id="btnSecretario" class="btn btn-default" onclick="registraSecretario()">Registrar</button>
+            <div id="statusSecretario"> </div>
+        </form>
+        <hr>
+        <br>
+        <form action="#" id="frmInicioVotacao" class="form-inline">
+            <div class="form-group">
+                <label for="iniciovotacao">Inicio da votação: </label>
+                <input type="datetime-local" min="2018-11-01" name="iniciovotacao" id="iniciovotacao">
+            </div>
+            <button type="submit" id="btnInicioVotacao" class="btn btn-default">Registrar</button>
+            <div id="statusInicioVotacao"> </div>
+        </form>
+        <hr>
+        <br>
+        <form action="#" id="frmFimVotacao" class="form-inline">
+            <div class="form-group">
+                <label for="fimvotacao">Fim da votação: </label>
+                <input type="datetime-local" min="2018-11-01" name="fimvotacao" id="fimvotacao">
+            </div>
+            <button type="submit" id="btnFimVotacao" class="btn btn-default">Registrar</button>
+            <div id="statusFimVotacao"> </div>
+        </form>
+    </div>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- <script src="js/web3.min.js"></script> -->
+    <script src="js/abi.js"></script>
+    <script src="js/presidente.js"></script>
+    <script>
+        contract.methods.totalDeVotantes().call({from: web3.eth.accounts[0], gas: 3000000, value: 0}, function (err, result) {
+            if (err)    {
+                console.error(err);
+            } else {
+                var nroVotantes = result*1;
+                if (nroVotantes>0) {
+                    let objStatus = document.getElementById("conectado");
+                    objStatus.innerText = "Sim";
+                }
+            }
+        });
+    </script>
+</body>
+</html>
