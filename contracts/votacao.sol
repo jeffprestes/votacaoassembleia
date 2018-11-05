@@ -17,6 +17,7 @@ contract VotacaoAssembleia {
 
     struct Votante {
         address conta;
+        string identificationID;
         uint quotaDeVotos;
         bool votou;
         bool existe;
@@ -91,11 +92,12 @@ contract VotacaoAssembleia {
     @notice função a ser utilizado somente pelo Secretário para incluir um novo participante apto a votar (votante)
     @param enderecoVotante - Endereço Ethereum da conta do votante
     @param quotaDeVotos - Quantidade de votos (ou percentual de ações/participações) que possuí o votante
+    @param qualIDVotante - (opcional) ID de algum documento ou Login Social que identifica o votante
     */
-    function incluiVotante(address enderecoVotante, uint quotaDeVotos) public somenteSecretario {
+    function incluiVotante(address enderecoVotante, uint quotaDeVotos, string qualIDVotante) public somenteSecretario {
         require(quotaDeVotos <= 99, "Quota nao pode ser superior a 99%");
         require(enderecoVotante != address(0), "O votante deve ter um endereco valido");
-        Votante memory novoVotante = Votante(enderecoVotante, quotaDeVotos, false, true);
+        Votante memory novoVotante = Votante(enderecoVotante, qualIDVotante, quotaDeVotos, false, true);
         votantes[enderecoVotante] = novoVotante;
         numeroVotantes.push(novoVotante);
     }
