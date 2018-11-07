@@ -7,6 +7,8 @@
     <title>Votação de Assembleia - Página para serviço do Presidente da Assembleia</title>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" href="css/general.css">
 </head>
 <body>
     <div class="container">
@@ -20,48 +22,56 @@
                 <input type="text" name="secretario" id="secretario" size="48">
             </div>
             &nbsp;
-            <button type="submit" id="btnSecretario" class="btn btn-default" onclick="registraSecretario()">Registrar</button>
-            <div id="statusSecretario"> </div>
+            <button type="submit" id="btnSecretario" class="btn btn-default" onclick="registraSecretario(); return false;">Registrar</button>
+            <div class="boxStatusTransacoes" id="statusSecretario"> </div>
         </form>
         <hr>
         <br>
-        <form action="#" id="frmInicioVotacao" class="form-inline">
+        <form action="#" id="frmInicioVotacao" name="frmInicioVotacao" class="form-inline">
             <div class="form-group">
-                <label for="iniciovotacao">Inicio da votação: </label>
-                <input type="datetime-local" min="2018-11-01" name="iniciovotacao" id="iniciovotacao">
+                <label for="inicioVotacao">Inicio da votação: &nbsp;</label>
+                <div class='input-group date' id='dtPickerInicioVotacao'>
+                    <input type='text' class="form-control" id="inicioVotacao" name="inicioVotacao" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
             </div>
-            <button type="submit" id="btnInicioVotacao" class="btn btn-default">Registrar</button>
-            <div id="statusInicioVotacao"> </div>
+            <button onclick="registraInicioVotacao(); return false;" type="button" id="btnInicioVotacao" class="btn btn-default">Registrar</button>
+            <div class="boxStatusTransacoes" id="statusInicioVotacao"> </div>
         </form>
         <hr>
         <br>
-        <form action="#" id="frmFimVotacao" class="form-inline">
+        <form action="#" id="frmFimVotacao" name="frmFimVotacao" class="form-inline">
             <div class="form-group">
-                <label for="fimvotacao">Fim da votação: </label>
-                <input type="datetime-local" min="2018-11-01" name="fimvotacao" id="fimvotacao">
+                <label for="fimVotacao">Fim da votação: &nbsp;</label>
+                <div class='input-group date' id='dtPickerFimVotacao'>
+                    <input type='text' class="form-control" id="fimVotacao" name="fimVotacao" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
             </div>
-            <button type="submit" id="btnFimVotacao" class="btn btn-default">Registrar</button>
-            <div id="statusFimVotacao"> </div>
+            <button onclick="registraFimVotacao(); return false;" type="button" id="btnFimVotacao" class="btn btn-default">Registrar</button>
+            <div class="boxStatusTransacoes" id="statusFimVotacao"> </div>
         </form>
+        <footer>
+            <hr>
+            <div>
+                Conexão a rede do Ethereum fornecido por:
+                &nbsp;&nbsp;
+                <span id="spanImgMetamask"><img id="imgMetamask" src="image/download-metamask-dark.png" alt="Baixe já o metamask"></span>
+            </div>
+        </footer>
     </div>
-    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <!-- <script src="js/web3.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/locale/pt-br.js"></script>
+    <script src="js/bootstrap-datetimepicker.min.js"></script>
+    <script src="js/moment-locale-pt-br.js"></script>
+    <script src="js/web3.min.js"></script>
     <script src="js/abi.js"></script>
     <script src="js/presidente.js"></script>
-    <script>
-        contract.methods.totalDeVotantes().call({from: web3.eth.accounts[0], gas: 3000000, value: 0}, function (err, result) {
-            if (err)    {
-                console.error(err);
-            } else {
-                var nroVotantes = result*1;
-                if (nroVotantes>0) {
-                    let objStatus = document.getElementById("conectado");
-                    objStatus.innerText = "Sim";
-                }
-            }
-        });
-    </script>
 </body>
 </html>
