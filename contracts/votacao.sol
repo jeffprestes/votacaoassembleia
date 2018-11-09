@@ -149,17 +149,18 @@ contract VotacaoAssembleia {
     /** 
     @notice função a ser usada para obter detalhes de uma proposta a ser apreciada (votada) na Assembleia
     @param numeroProposta - Número inteiro e único que identifica a proposta
+    @return ID da proposta
     @return Texto da proposta
     @return Endereço Ethereum da conta do proponente
     @return Número de votos (ou percentual de ações/participações) de apoio recebido
     @return Número de votos (ou percentual de ações/participações) de apoio mínimo que a proposta necessita para ser aprovada
     */
-    function pesquisarProposta(uint numeroProposta) public view returns (string, address, uint, uint)  {
+    function pesquisarProposta(uint numeroProposta) public view returns (uint, string, address, uint, uint)  {
         Proposta memory propostaTemporario = propostas[numeroProposta];
         if (propostaTemporario.existe) {
-            return (propostaTemporario.texto, propostaTemporario.proponente, propostaTemporario.quotaDeVotos, propostaTemporario.quotaMinimaParaAprovacao);
+            return (numeroProposta, propostaTemporario.texto, propostaTemporario.proponente, propostaTemporario.quotaDeVotos, propostaTemporario.quotaMinimaParaAprovacao);
         } else {
-            return ("", 0, 0, 0);
+            return (0, "", 0, 0, 0);
         }
     }
 
