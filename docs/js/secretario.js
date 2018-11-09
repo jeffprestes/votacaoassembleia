@@ -31,6 +31,7 @@ function incluiVotante() {
             return
         }
         console.log("incluiVotante - Enviando... " + frm.enderecoVotante.value + " " + nroQuota + " " + frm.idVotante.value);
+        $("#statusIncluiVotante").text("Por favor, confirme o envio da transação no Metamask");
         contract.methods.incluiVotante(frm.enderecoVotante.value, nroQuota, frm.idVotante.value).send(trxObj)
             .on('transactionHash', function(hash){
                 $("#statusIncluiVotante").css("background-color", "yellow");
@@ -80,6 +81,7 @@ function incluiProposta() {
             return
         }
         console.log("incluiProposta - Enviando... " + frm.qualProponente.value + " " + nroQuota + " " + frm.textoProposta.value);
+        $("#statusIncluiProposta").text("Por favor, confirme o envio da transação no Metamask");
         contract.methods.incluiProposta(frm.textoProposta.value, frm.qualProponente.value, nroQuota).send(trxObj)
             .on('transactionHash', function(hash){
                 $("#statusIncluiProposta").css("background-color", "yellow");

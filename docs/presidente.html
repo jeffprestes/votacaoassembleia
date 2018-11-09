@@ -16,45 +16,64 @@
         <h2>Página para serviço do Presidente da Assembleia</h2>
         <h5>Conectado ao Smart Contract? <span id="conectado">Não</span></h5>
         <br>
-        <form action="#" id="frmSecretario" name="frmSecretario" class="form-inline">
-            <div class="form-group">
-                <label for="secretario">Secretário: &nbsp;</label>
-                <input type="text" name="secretario" id="secretario" size="48">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Define o secretário da Assembléia
             </div>
-            &nbsp;
-            <button type="submit" id="btnSecretario" class="btn btn-default" onclick="registraSecretario(); return false;">Registrar</button>
-            <div class="boxStatusTransacoes" id="statusSecretario"> </div>
-        </form>
+            <div class="panel-body">
+                <form action="#" id="frmSecretario" name="frmSecretario" class="form-inline">
+                    <div class="form-group">
+                        <label for="secretario">Endereço Ethereum do Secretário: &nbsp;</label>
+                        <input type="text" name="secretario" id="secretario" size="48">
+                    </div>
+                    &nbsp;
+                    <button type="submit" id="btnSecretario" class="btn btn-default" onclick="registraSecretario(); return false;">Registrar</button>
+                </form>
+            </div>
+            <div class="boxStatusTransacoes panel-footer" id="statusSecretario"> </div>
+        </div>
         <hr>
-        <br>
-        <form action="#" id="frmInicioVotacao" name="frmInicioVotacao" class="form-inline">
-            <div class="form-group">
-                <label for="inicioVotacao">Inicio da votação: &nbsp;</label>
-                <div class='input-group date' id='dtPickerInicioVotacao'>
-                    <input type='text' class="form-control" id="inicioVotacao" name="inicioVotacao" />
-                    <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-calendar"></span>
-                    </span>
-                </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Define a data e hora para o INICIO da votação
             </div>
-            <button onclick="registraInicioVotacao(); return false;" type="button" id="btnInicioVotacao" class="btn btn-default">Registrar</button>
-            <div class="boxStatusTransacoes" id="statusInicioVotacao"> </div>
-        </form>
+            <div class="panel-body">
+                <form action="#" id="frmInicioVotacao" name="frmInicioVotacao" class="form-inline">
+                    <div class="form-group">
+                        <label for="inicioVotacao">Inicio da votação: &nbsp;</label>
+                        <div class='input-group date' id='dtPickerInicioVotacao'>
+                            <input type='text' class="form-control" id="inicioVotacao" name="inicioVotacao" />
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                    <button onclick="registraInicioVotacao(); return false;" type="button" id="btnInicioVotacao" class="btn btn-default">Registrar</button>
+                </form>
+            </div>
+            <div class="boxStatusTransacoes panel-footer" id="statusInicioVotacao"> </div>
+        </div>
         <hr>
-        <br>
-        <form action="#" id="frmFimVotacao" name="frmFimVotacao" class="form-inline">
-            <div class="form-group">
-                <label for="fimVotacao">Fim da votação: &nbsp;</label>
-                <div class='input-group date' id='dtPickerFimVotacao'>
-                    <input type='text' class="form-control" id="fimVotacao" name="fimVotacao" />
-                    <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-calendar"></span>
-                    </span>
-                </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Define a data e hora para o FIM da votação
             </div>
-            <button onclick="registraFimVotacao(); return false;" type="button" id="btnFimVotacao" class="btn btn-default">Registrar</button>
-            <div class="boxStatusTransacoes" id="statusFimVotacao"> </div>
-        </form>
+            <div class="panel-body">
+                <form action="#" id="frmFimVotacao" name="frmFimVotacao" class="form-inline">
+                    <div class="form-group">
+                        <label for="fimVotacao">Fim da votação: &nbsp;</label>
+                        <div class='input-group date' id='dtPickerFimVotacao'>
+                            <input type='text' class="form-control" id="fimVotacao" name="fimVotacao" />
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                    <button onclick="registraFimVotacao(); return false;" type="button" id="btnFimVotacao" class="btn btn-default">Registrar</button>
+                </form>
+            </div>
+            <div class="boxStatusTransacoes panel-footer" id="statusFimVotacao"> </div>
+        </div>
         <footer>
             <hr>
             <div>

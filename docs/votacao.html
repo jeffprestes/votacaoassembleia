@@ -5,18 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Votação de Assembleia - Votação</title>
-    <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/general.css">
 </head>
 <body>
     <div class="container">
-        <h1>Votação de Assembleia - Votação</h1>
+        <h1>Votação de Assembleia</h1>
+        <h2>Página de votação</h2>
+        <h5>Conectado ao Smart Contract? <span id="conectado">Não</span></h5>
+        <hr>
+        <div id="propostas">
+        </div>
+        <div id="template" style="display: none">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                </div>
+                <div class="panel-body">
+                    <div>
+                        Proponente: <span></span>
+                    </div>
+                    <br>
+                    <div>
+                        Você concorda? 
+                        &nbsp;
+                        <select id="voto" onchange="registrarVoto(event)">
+                            <option value="" selected></option>
+                            <option value="true">Sim</option>
+                            <option value="false">Não</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="panel-footer statusvoto" id="">
+                </div>
+            </div>
+        </div>
     </div>
-    
-    <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
-    <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="js/web3.min.js"></script>
+    <script src="js/abi.js"></script>
+    <script src="js/votacao.js"></script>
 </body>
 </html>

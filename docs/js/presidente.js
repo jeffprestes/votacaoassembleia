@@ -11,13 +11,14 @@ function registraSecretario() {
             return
         }
         console.log("registraSecretario - Enviando..." + frm.secretario.value);
+        $("#statusSecretario").text("Por favor, confirme o envio da transação no Metamask");
         contract.methods.designarSecretario(frm.secretario.value).send({from: conta, gas: 3000000, value: 0})
             .on('transactionHash', function(hash){
                 $("#statusSecretario").css("background-color", "yellow");
                 $("#statusSecretario").text("Transação enviada a rede do Ethereum. Aguarde enquanto ela é confirmada. Transaction hash: " + hash);
             })
             .on('confirmation', function(confirmationNumber, txReceipt){
-                if (confirmationNumber > 23) {
+                if (confirmationNumber == 7) {
                     if (txReceipt) {
                         if (txReceipt.status == "0x1") {
                             $("#statusSecretario").css("background-color", "LawnGreen");
@@ -42,6 +43,7 @@ function registraInicioVotacao() {
         try {
             let tempo = converteDataParaTimestamp(frm.inicioVotacao.value);
             console.log("registraInicioVotacao - Enviando..." + tempo);
+            $("#statusInicioVotacao").text("Por favor, confirme o envio da transação no Metamask");
             contract.methods.definirInicioVotacao(tempo).send({from: conta, gas: 3000000, value: 0})
             .on('transactionHash', function(hash){
                 $("#statusInicioVotacao").css("background-color", "yellow");
@@ -77,6 +79,7 @@ function registraFimVotacao() {
         try {
             let tempo = converteDataParaTimestamp(frm.fimVotacao.value);
             console.log("registraFimVotacao - Enviando..." + tempo);
+            $("#statusFimVotacao").text("Por favor, confirme o envio da transação no Metamask");
             contract.methods.definirFimVotacao(tempo).send({from: conta, gas: 3000000, value: 0})
             .on('transactionHash', function(hash){
                 $("#statusFimVotacao").css("background-color", "yellow");
