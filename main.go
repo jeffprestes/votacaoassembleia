@@ -20,7 +20,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Erro ao conectar ao nó do Ethereum: %s\n", err.Error())
 	}
-	contractAddress := common.HexToAddress("0x771fd37069b93bf0e41142712426d8046568897a")
+	contractAddress := common.HexToAddress("0xb1cdd1f13fbc5963ba5d4211300f40c10037bb03")
 	contract, err := proxycontracts.NewVotacaoAssembleia(contractAddress, client)
 	if err != nil {
 		log.Fatalf("Erro ao gerar um proxy do Smart Contract: %s\n", err.Error())
@@ -41,7 +41,7 @@ func main() {
 	var eventLog proxycontracts.VotacaoAssembleiaVotou
 	for logs.Next() {
 		eventLog = *logs.Event
-		descricaoProposta, proponente, _, _, err := contract.PesquisarProposta(nil, eventLog.PropostaVotada)
+		idProposta, descricaoProposta, proponente, _, _, err := contract.PesquisarProposta(nil, eventLog.PropostaVotada)
 		if err != nil {
 			log.Printf("Erro ao pesquisar os detalhes da proposta: %s\n", err.Error())
 			continue
@@ -51,7 +51,7 @@ func main() {
 			log.Printf("Erro ao checar se a proposta foi aprovada: %s\n", err.Error())
 			continue
 		}
-		geraSinteseVoto(pdf, descricaoProposta, proponente, eventLog.QuemVotou, eventLog.QualVoto, propostaAprovada)
+		geraSinteseVoto(pdf, idProposta.Text(10), descricaoProposta, proponente, eventLog.QuemVotou, eventLog.QualVoto, propostaAprovada)
 	}
 	err = pdf.OutputFileAndClose("ata_votacao_assembleia.pdf")
 	if err != nil {
@@ -59,9 +59,10 @@ func main() {
 	}
 }
 
-func geraSinteseVoto(pdf *gofpdf.Fpdf, descricaoProposta string, proponente common.Address, quemVotou common.Address, qualVoto bool, aPropostaFoiAprovada bool) {
+func geraSinteseVoto(pdf *gofpdf.Fpdf, idProposta string, descricaoProposta string, proponente common.Address, quemVotou common.Address, qualVoto bool, aPropostaFoiAprovada bool) {
 	var sinteseVoto strings.Builder
 	sinteseVoto.WriteString("Proposta: ")
+	sinteseVoto.WriteString(idProposta + " - ")
 	sinteseVoto.WriteString(descricaoProposta)
 	sinteseVoto.WriteString(" - ")
 	sinteseVoto.WriteString("Proponente: ")
