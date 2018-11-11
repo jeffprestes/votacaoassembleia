@@ -4,28 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Votação de Assembleia</title>
-    <!-- Latest compiled and minified CSS -->
+    <title>Votação de Assembleia - Votação</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/general.css">
 </head>
 <body>
     <div class="container">
         <h1>Votação de Assembleia</h1>
-        <h2>Seja bem vindo. Escolha abaixo a opção apropriada.</h2>
+        <h2>Resultado da votação</h2>
         <h5>Conectado ao Smart Contract? <span id="conectado">Não</span></h5>
         <hr>
-        <p>📌 <a href="presidente.html">Presidente</a></p> 
-        <p>📌 <a href="secretario.html">Secretario</a></p>
-        <p>📌 <a href="votacao.html">Votação</a></p>
-        <p>📌 <a href="resultado.html">Resultado da votação</a></p>
-    
-        <br>
+        <div id="propostas">
+        </div>
+        <div id="template" style="display: none">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                </div>
+                <div class="panel-body">
+                    <div>
+                        Proponente: <span id="spanProponente"></span>
+                    </div>
+                    <br>
+                    <div>
+                        Numero de votos recebidos: <span id="spanNroVotos"></span>
+                    </div>
+                    <br>
+                    <div>
+                        Aprovada: <span id="spanAprovada"></span>
+                    </div>
+                </div>
+                <div class="panel-footer statusvoto" id="">
+                </div>
+            </div>
+        </div>
         <hr>
         <div>
             Votação registrada sob o contrato: <a id="linkContrato" href="" target="_blank"></a>
         </div>
-        <br>
         <footer>
             <hr>
             <div>
@@ -39,5 +54,6 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="js/web3.min.js"></script>
     <script src="js/abi.js"></script>
+    <script src="js/votacao.js"></script>
 </body>
 </html>

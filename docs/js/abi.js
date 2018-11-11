@@ -1,7 +1,9 @@
 const VotacaoAssembleiaABI = [{"anonymous":false,"inputs":[{"indexed":false,"name":"quemVotou","type":"address"},{"indexed":false,"name":"propostaVotada","type":"uint256"},{"indexed":false,"name":"qualVoto","type":"bool"}],"name":"Votou","type":"event"},{"constant":false,"inputs":[{"name":"qualDataFimVotacao","type":"uint256"}],"name":"definirFimVotacao","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"qualDataInicioVotacao","type":"uint256"}],"name":"definirInicioVotacao","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"secretarioDesignado","type":"address"}],"name":"designarSecretario","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"qualTextoDaProposta","type":"string"},{"name":"qualProponente","type":"address"},{"name":"qualQuotaMinimaParaAprovacao","type":"uint256"}],"name":"incluiProposta","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"enderecoVotante","type":"address"},{"name":"quotaDeVotos","type":"uint256"},{"name":"qualIDVotante","type":"string"}],"name":"incluiVotante","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"numeroProposta","type":"uint256"},{"name":"favoravelAProposta","type":"bool"}],"name":"votar","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"qualMotivoConvocatoria","type":"string"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"constant":true,"inputs":[],"name":"detalhesAssembleia","outputs":[{"name":"","type":"address"},{"name":"","type":"address"},{"name":"","type":"string"},{"name":"","type":"uint256"},{"name":"","type":"uint256"},{"name":"","type":"uint256"},{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"numeroProposta","type":"uint256"}],"name":"pesquisarProposta","outputs":[{"name":"","type":"uint256"},{"name":"","type":"string"},{"name":"","type":"address"},{"name":"","type":"uint256"},{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"indiceVotante","type":"address"}],"name":"pesquisarVotante","outputs":[{"name":"","type":"address"},{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"indiceVotante","type":"uint256"}],"name":"pesquisarVotantePorIndice","outputs":[{"name":"","type":"address"},{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"numeroProposta","type":"uint256"}],"name":"propostaAprovada","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"qualMotivoDaConvocatoria","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"quandoEncerraVotacao","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"totalDePropostas","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"totalDeVotantes","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"}];
+const contractAddress = "0xb1cdd1f13fbc5963ba5d4211300f40c10037bb03";
 var contract;
 var conta;
 var trxObj;
+
 
 window.addEventListener('load', async (event) => {
     // Navegadores com novo Metamask    
@@ -31,7 +33,7 @@ window.addEventListener('load', async (event) => {
 
 
 function instanciaContrato() {
-    contract = new web3.eth.Contract(VotacaoAssembleiaABI, "0xb1cdd1f13fbc5963ba5d4211300f40c10037bb03"); 
+    contract = new web3.eth.Contract(VotacaoAssembleiaABI, contractAddress); 
 }
 
 function verificaConta() {
@@ -41,6 +43,7 @@ function verificaConta() {
                 console.error(err);
             } else {
                 conta = accounts[0];
+                exibeStatusConexao();
                 trxObj = {from: conta, gas: 4000000, value: 0}
                 var evt = $.Event('smartcontractdisponivel');
                 evt.state = true;
@@ -50,6 +53,14 @@ function verificaConta() {
     }
 }
 
+function exibeStatusConexao() {
+    let objStatus = document.getElementById("conectado");
+    objStatus.innerText = "Sim";
+    let objLink = document.getElementById("linkContrato");
+    objLink.setAttribute("href", "https://rinkeby.etherscan.io/address/" + contractAddress);
+    objLink.innerText = contractAddress;
+}
+
 function setupContaEContrato() {
     instanciaContrato();
     verificaConta();
@@ -57,8 +68,6 @@ function setupContaEContrato() {
 
 function estaConectado() {
     web3.eth.net.isListening().then(function() {
-        let objStatus = document.getElementById("conectado");
-        objStatus.innerText = "Sim";
         setupContaEContrato();
     })
     .catch(e => console.log('Não, não esta conectado. Erro: ' + e));

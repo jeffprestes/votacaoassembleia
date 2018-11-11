@@ -22,26 +22,60 @@ function pesquisarPropostas(nroTotalDePropostas) {
                 if (err)    {
                     console.error("pesquisarPropostas - Erro: " + err);
                 } else {
-                    console.log("pesquisarPropostas resultados");
-                    console.log(proposta);
-                    var itm = document.getElementById("template");
-                    var cln = itm.cloneNode(true);
-                    cln.id = "div_" + proposta[0];
-                    var titProposta = cln.getElementsByClassName("panel-heading")[0];
-                    titProposta.innerText = "Proposta nro: " + ((proposta[0]*1)+1) + " - " + proposta[1];
-                    var cboVoto = cln.getElementsByTagName("SELECT")[0];
-                    cboVoto.id = "cbovoto_" + proposta[0];
-                    cboVoto.setAttribute("name", cboVoto.id); 
-                    var divStatusProposta = cln.getElementsByClassName("statusvoto")[0];
-                    divStatusProposta.id = "status_" + proposta[0];
-                    var spanProponente = cln.getElementsByTagName("SPAN")[0];
-                    spanProponente.innerText = proposta[2];
-                    cln.setAttribute("style", "display: block");
-                    document.getElementById("propostas").appendChild(cln);
+                    console.log("pesquisarPropostas: " + window.location.pathname);
+                    if (window.location.pathname.includes("votacao.html")) {
+                        setupPaginaVotos(proposta);
+                    } else if (window.location.pathname.includes("resultado.html")) {
+                        setupResultadoVotos(proposta);
+                    }
                 }
             });
         }
     }
+}
+
+function setupPaginaVotos(proposta) {
+    console.log("setupPaginaVotos");
+    console.log(proposta);
+    var itm = document.getElementById("template");
+    var cln = itm.cloneNode(true);
+    cln.id = "div_" + proposta[0];
+    var titProposta = cln.getElementsByClassName("panel-heading")[0];
+    titProposta.innerText = "Proposta nro: " + ((proposta[0]*1)+1) + " - " + proposta[1];
+    var cboVoto = cln.getElementsByTagName("SELECT")[0];
+    cboVoto.id = "cbovoto_" + proposta[0];
+    cboVoto.setAttribute("name", cboVoto.id); 
+    var divStatusProposta = cln.getElementsByClassName("statusvoto")[0];
+    divStatusProposta.id = "status_" + proposta[0];
+    var spanProponente = cln.getElementsByTagName("SPAN")[0];
+    spanProponente.innerText = proposta[2];
+    cln.setAttribute("style", "display: block");
+    document.getElementById("propostas").appendChild(cln);
+}
+
+function setupResultadoVotos(proposta) {
+    console.log("setupResultadoVotos");
+    console.log(proposta);
+    var itm = document.getElementById("template");
+    var cln = itm.cloneNode(true);
+    cln.id = "div_" + proposta[0];
+    var titProposta = cln.getElementsByClassName("panel-heading")[0];
+    titProposta.innerText = "Proposta nro: " + ((proposta[0]*1)+1) + " - " + proposta[1];
+    var panelBody = cln.getElementsByClassName("panel-body")[0];
+    var spanProponente = panelBody.getElementsByTagName("SPAN")[0];
+    spanProponente.innerText = proposta[2];
+    var spanNroVotos = panelBody.getElementsByTagName("SPAN")[1];
+    spanNroVotos.innerText = proposta[3];
+    var spanAprovada = panelBody.getElementsByTagName("SPAN")[2];
+    var nroVotosRecebidos = (proposta[3]*1);
+    var quotaParaAprovacao = (proposta[4]*1);
+    if (nroVotosRecebidos>=quotaParaAprovacao) {
+        spanAprovada.innerText = "Sim";
+    } else {
+        spanAprovada.innerText = "Não";
+    }
+    cln.setAttribute("style", "display: block");
+    document.getElementById("propostas").appendChild(cln);
 }
 
 function registrarVoto(event) {
