@@ -24,7 +24,7 @@ contract VotacaoAssembleia {
     }
 
     modifier somenteSecretario() {
-        if (controleRigido) {
+        if (precisaSecretario) {
             require(secretario == msg.sender, "Só o secretário pode realizar essa operação");
         }
         _;
@@ -47,18 +47,18 @@ contract VotacaoAssembleia {
     uint dataInicioVotacao;
     uint dataFimVotacao;
     string motivoConvocatoria;
-    bool controleRigido;
+    bool precisaSecretario;
 
     /**
     @notice A pessoa que presidirá a Assembléia deve registrar o Smart Contract
     @dev Cria um contrato específico para uma Assembleia. O presidente designado é quem registrou o Smart Contract na rede
     @param qualMotivoConvocatoria - O presidente da Assembléia escreve o motivo da convocatória da Assembléia
-    @param qualNivelControle - Verdadeiro caso as propostas e os votantes possam ser definidos somente pelo secretario
+    @param eNecessarioSecretario - Verdadeiro caso o presidente necessite de um secretario para controlar os votantes e propostas
     */
-    constructor (string qualMotivoConvocatoria, bool qualNivelControle) public {
+    constructor (string qualMotivoConvocatoria, bool eNecessarioSecretario) public {
         presidente = msg.sender;
         motivoConvocatoria = qualMotivoConvocatoria;
-        controleRigido = qualNivelControle;
+        precisaSecretario = eNecessarioSecretario;
     }
 
     /**
