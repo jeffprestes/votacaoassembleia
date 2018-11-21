@@ -126,12 +126,12 @@ contract VotacaoAssembleia {
     @return Endereço Ethereum da conta do votante
     @return Número de votos (ou percentual de ações/participações) do votante
     */
-    function pesquisarVotante(address indiceVotante) public view returns (address, uint, string) {
+    function pesquisarVotante(address indiceVotante) public view returns (address, uint, string, bool) {
         Votante memory votanteTemporario = votantes[indiceVotante];
         if (votanteTemporario.existe == true) {
-            return (votanteTemporario.conta, votanteTemporario.quotaDeVotos, votanteTemporario.identificationID);
+            return (votanteTemporario.conta, votanteTemporario.quotaDeVotos, votanteTemporario.identificationID, votanteTemporario.votou);
         } else {
-            return (0,0,"");
+            return (0,0,"",false);
         }
     }
 
@@ -141,13 +141,13 @@ contract VotacaoAssembleia {
     @return Endereço Ethereum da conta do votante
     @return Número de votos (ou percentual de ações/participações) do votante
     */
-    function pesquisarVotantePorIndice(uint indiceVotante) public view returns (address, uint, string) {
+    function pesquisarVotantePorIndice(uint indiceVotante) public view returns (address, uint, string, bool) {
         require(indiceVotante <= numeroVotantes.length, "Indice informado é maior que o numero de votantes");
         Votante memory votanteTemporario = numeroVotantes[indiceVotante];
         if (votanteTemporario.existe == true) {
-            return (votanteTemporario.conta, votanteTemporario.quotaDeVotos, votanteTemporario.identificationID);
+            return (votanteTemporario.conta, votanteTemporario.quotaDeVotos, votanteTemporario.identificationID, votanteTemporario.votou);
         } else {
-            return (0,0,"");
+            return (0,0,"",false);
         }
     }
 
