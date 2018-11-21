@@ -131,7 +131,7 @@ contract VotacaoAssembleia {
         if (votanteTemporario.existe == true) {
             return (votanteTemporario.conta, votanteTemporario.quotaDeVotos, votanteTemporario.identificationID);
         } else {
-            return (0,0);
+            return (0,0,"");
         }
     }
 
@@ -147,7 +147,7 @@ contract VotacaoAssembleia {
         if (votanteTemporario.existe == true) {
             return (votanteTemporario.conta, votanteTemporario.quotaDeVotos, votanteTemporario.identificationID);
         } else {
-            return (0,0);
+            return (0,0,"");
         }
     }
 
