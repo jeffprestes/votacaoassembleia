@@ -141,11 +141,11 @@ contract VotacaoAssembleia {
     @return Endereço Ethereum da conta do votante
     @return Número de votos (ou percentual de ações/participações) do votante
     */
-    function pesquisarVotantePorIndice(uint indiceVotante) public view returns (address, uint) {
+    function pesquisarVotantePorIndice(uint indiceVotante) public view returns (address, uint, string) {
         require(indiceVotante <= numeroVotantes.length, "Indice informado é maior que o numero de votantes");
         Votante memory votanteTemporario = numeroVotantes[indiceVotante];
         if (votanteTemporario.existe == true) {
-            return (votanteTemporario.conta, votanteTemporario.quotaDeVotos);
+            return (votanteTemporario.conta, votanteTemporario.quotaDeVotos, votanteTemporario.identificationID);
         } else {
             return (0,0);
         }
