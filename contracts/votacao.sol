@@ -36,10 +36,10 @@ contract VotacaoAssembleia {
     }
 
     //Evento a ser disparado quando um votante definiu seu voto
-    event Votou(address quemVotou, uint propostaVotada, bool qualVoto);
+    event Votou(address quemVotou, uint propostaVotada, uint8 qualVoto);
     
     //Evento a ser disparado quando alguem tentou votar
-    event FoiAUrna(uint quando, address quemVotou, uint propostaVotada, bool qualVoto);
+    event FoiAUrna(uint quando, address quemVotou, uint propostaVotada, uint8 qualVoto);
 
     //Informações gerais da Assembleia
     Proposta[] propostas;
@@ -239,10 +239,10 @@ contract VotacaoAssembleia {
             A votação deve estar aberta para ser permitida
             Um votante só tem permissão de votar uma vez e o voto não pode ser alterado.
     @param numeroProposta - Numero identificador da proposta
-    @param favoravelAProposta - Verdadeiro/Falso onde o votante expressa se aprova ou não a proposta
+    @param favoravelAProposta - 1 para se favoravel a proposta e 0 caso nao seja
     @return Verdadeiro caso o voto tenha sido computado com sucesso
     */
-    function votar(uint numeroProposta, bool favoravelAProposta) public returns (bool) {
+    function votar(uint numeroProposta, uint8 favoravelAProposta) public returns (bool) {
         emit FoiAUrna(now, msg.sender, numeroProposta, favoravelAProposta);
         require(dataFimVotacao>=now, "Votacao encerrada");
         require(dataInicioVotacao<=now, "Votação ainda não foi aberta");
@@ -251,7 +251,7 @@ contract VotacaoAssembleia {
             Votante storage votanteTemporario = votantes[msg.sender];
             if (votanteTemporario.existe) {
                 if (!propostaTemporario.quemVotou[votanteTemporario.conta].existe) {
-                    if (favoravelAProposta == true) {
+                    if (favoravelAProposta > 0) {
                         propostaTemporario.quotaDeVotos = propostaTemporario.quotaDeVotos + votanteTemporario.quotaDeVotos;
                     }
                     emit Votou(msg.sender, numeroProposta, favoravelAProposta);
