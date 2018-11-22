@@ -39,7 +39,7 @@ function incluiVotante() {
             })
             .on('confirmation', function(confirmationNumber, txReceipt) {
                 console.log("Confirmation number: " + confirmationNumber + " - Recibo: " + txReceipt);
-                if (confirmationNumber == 7) {
+                if (confirmationNumber == 2) {
                     if (txReceipt) {
                         if (txReceipt.status == "0x1") {
                             $("#statusIncluiVotante").css("background-color", "LawnGreen");
@@ -89,7 +89,7 @@ function incluiProposta() {
             })
             .on('confirmation', function(confirmationNumber, txReceipt) {
                 console.log("Confirmation number: " + confirmationNumber + " - Recibo: " + txReceipt);
-                if (confirmationNumber == 7) {
+                if (confirmationNumber == 2) {
                     if (txReceipt) {
                         if (txReceipt.status == "0x1") {
                             $("#statusIncluiProposta").css("background-color", "LawnGreen");
