@@ -13,13 +13,13 @@ contract VotacaoAssembleia {
         uint quotaDeVotos;
         uint quotaMinimaParaAprovacao;
         bool existe;
+        mapping(address=>Votante) quemVotou;
     }
 
     struct Votante {
         address conta;
         string identificationID;
         uint quotaDeVotos;
-        bool votou;
         bool existe;
     }
 
@@ -37,6 +37,9 @@ contract VotacaoAssembleia {
 
     //Evento a ser disparado quando um votante definiu seu voto
     event Votou(address quemVotou, uint propostaVotada, bool qualVoto);
+    
+    //Evento a ser disparado quando alguem tentou votar
+    event FoiAUrna(uint quando, address quemVotou, uint propostaVotada, bool qualVoto);
 
     //Informações gerais da Assembleia
     Proposta[] propostas;
@@ -102,7 +105,7 @@ contract VotacaoAssembleia {
     function incluiVotante(address enderecoVotante, uint quotaDeVotos, string qualIDVotante) public somenteSecretario {
         require(quotaDeVotos <= 99, "Quota nao pode ser superior a 99%");
         require(enderecoVotante != address(0), "O votante deve ter um endereco valido");
-        Votante memory novoVotante = Votante(enderecoVotante, qualIDVotante, quotaDeVotos, false, true);
+        Votante memory novoVotante = Votante(enderecoVotante, qualIDVotante, quotaDeVotos, true);
         votantes[enderecoVotante] = novoVotante;
         numeroVotantes.push(novoVotante);
     }
@@ -126,12 +129,12 @@ contract VotacaoAssembleia {
     @return Endereço Ethereum da conta do votante
     @return Número de votos (ou percentual de ações/participações) do votante
     */
-    function pesquisarVotante(address indiceVotante) public view returns (address, uint, string, bool) {
+    function pesquisarVotante(address indiceVotante) public view returns (address, uint, string) {
         Votante memory votanteTemporario = votantes[indiceVotante];
         if (votanteTemporario.existe == true) {
-            return (votanteTemporario.conta, votanteTemporario.quotaDeVotos, votanteTemporario.identificationID, votanteTemporario.votou);
+            return (votanteTemporario.conta, votanteTemporario.quotaDeVotos, votanteTemporario.identificationID);
         } else {
-            return (0,0,"",false);
+            return (0,0,"");
         }
     }
 
@@ -141,13 +144,13 @@ contract VotacaoAssembleia {
     @return Endereço Ethereum da conta do votante
     @return Número de votos (ou percentual de ações/participações) do votante
     */
-    function pesquisarVotantePorIndice(uint indiceVotante) public view returns (address, uint, string, bool) {
+    function pesquisarVotantePorIndice(uint indiceVotante) public view returns (address, uint, string) {
         require(indiceVotante <= numeroVotantes.length, "Indice informado é maior que o numero de votantes");
         Votante memory votanteTemporario = numeroVotantes[indiceVotante];
         if (votanteTemporario.existe == true) {
-            return (votanteTemporario.conta, votanteTemporario.quotaDeVotos, votanteTemporario.identificationID, votanteTemporario.votou);
+            return (votanteTemporario.conta, votanteTemporario.quotaDeVotos, votanteTemporario.identificationID);
         } else {
-            return (0,0,"",false);
+            return (0,0,"");
         }
     }
 
@@ -240,20 +243,21 @@ contract VotacaoAssembleia {
     @return Verdadeiro caso o voto tenha sido computado com sucesso
     */
     function votar(uint numeroProposta, bool favoravelAProposta) public returns (bool) {
+        emit FoiAUrna(now, msg.sender, numeroProposta, favoravelAProposta);
         require(dataFimVotacao>=now, "Votacao encerrada");
         require(dataInicioVotacao<=now, "Votação ainda não foi aberta");
         Proposta storage propostaTemporario = propostas[numeroProposta];
         if (propostaTemporario.existe) {
             Votante storage votanteTemporario = votantes[msg.sender];
-            if (votanteTemporario.existe == true) {
-                if (votanteTemporario.votou == false) {
+            if (votanteTemporario.existe) {
+                if (!propostaTemporario.quemVotou[votanteTemporario.conta].existe) {
                     if (favoravelAProposta == true) {
                         propostaTemporario.quotaDeVotos = propostaTemporario.quotaDeVotos + votanteTemporario.quotaDeVotos;
                     }
                     emit Votou(msg.sender, numeroProposta, favoravelAProposta);
-                    votanteTemporario.votou = true;
+                    propostaTemporario.quemVotou[votanteTemporario.conta] = votanteTemporario;
                     return true;
-                } 
+                }
             } 
         } 
         return false;
