@@ -36,10 +36,10 @@ contract VotacaoAssembleia {
     }
 
     //Evento a ser disparado quando um votante definiu seu voto
-    event Votou(address quemVotou, uint propostaVotada, uint8 qualVoto);
+    event Votou(address indexed quemVotou, uint indexed propostaVotada, uint8 qualVoto);
     
     //Evento a ser disparado quando alguem tentou votar
-    event FoiAUrna(uint quando, address quemVotou, uint propostaVotada, uint8 qualVoto);
+    event FoiAUrna(uint indexed quando, address indexed quemVotou, uint indexed propostaVotada, uint8 qualVoto);
 
     //Informações gerais da Assembleia
     Proposta[] propostas;
