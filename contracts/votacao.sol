@@ -1,4 +1,4 @@
-pragma  solidity 0.4.25;
+pragma  solidity 0.5.2;
 
 /**
 @title VotacaoAssembleia
@@ -58,7 +58,7 @@ contract VotacaoAssembleia {
     @param qualMotivoConvocatoria - O presidente da Assembléia escreve o motivo da convocatória da Assembléia
     @param eNecessarioSecretario - Verdadeiro caso o presidente necessite de um secretario para controlar os votantes e propostas
     */
-    constructor (string qualMotivoConvocatoria, bool eNecessarioSecretario) public {
+    constructor (string memory qualMotivoConvocatoria, bool eNecessarioSecretario) public {
         presidente = msg.sender;
         motivoConvocatoria = qualMotivoConvocatoria;
         precisaSecretario = eNecessarioSecretario;
@@ -102,7 +102,7 @@ contract VotacaoAssembleia {
     @param quotaDeVotos - Quantidade de votos (ou percentual de ações/participações) que possuí o votante
     @param qualIDVotante - (opcional) ID de algum documento ou Login Social que identifica o votante
     */
-    function incluiVotante(address enderecoVotante, uint quotaDeVotos, string qualIDVotante) public somenteSecretario {
+    function incluiVotante(address enderecoVotante, uint quotaDeVotos, string memory qualIDVotante) public somenteSecretario {
         require(quotaDeVotos <= 99, "Quota nao pode ser superior a 99%");
         require(enderecoVotante != address(0), "O votante deve ter um endereco valido");
         Votante memory novoVotante = Votante(enderecoVotante, qualIDVotante, quotaDeVotos, true);
@@ -117,7 +117,7 @@ contract VotacaoAssembleia {
     @param qualQuotaMinimaParaAprovacao -   Quantidade de votos (ou percentual de ações/participações) mínima que por estatuto/contrato a 
                                             proposta deve receber para ser aprovada
     */
-    function incluiProposta(string qualTextoDaProposta, address qualProponente, uint qualQuotaMinimaParaAprovacao) public somenteSecretario {
+    function incluiProposta(string memory qualTextoDaProposta, address qualProponente, uint qualQuotaMinimaParaAprovacao) public somenteSecretario {
         Proposta memory novaProposta = Proposta(qualTextoDaProposta, qualProponente, 0, qualQuotaMinimaParaAprovacao, true);
         propostas.push(novaProposta);
     }
@@ -129,12 +129,13 @@ contract VotacaoAssembleia {
     @return Endereço Ethereum da conta do votante
     @return Número de votos (ou percentual de ações/participações) do votante
     */
-    function pesquisarVotante(address indiceVotante) public view returns (address, uint, string) {
+    function pesquisarVotante(address indiceVotante) public view returns (address, uint, string memory) {
         Votante memory votanteTemporario = votantes[indiceVotante];
         if (votanteTemporario.existe == true) {
             return (votanteTemporario.conta, votanteTemporario.quotaDeVotos, votanteTemporario.identificationID);
         } else {
-            return (0,0,"");
+            string memory none = "";
+            return (address(0), 0, none);
         }
     }
 
@@ -144,13 +145,14 @@ contract VotacaoAssembleia {
     @return Endereço Ethereum da conta do votante
     @return Número de votos (ou percentual de ações/participações) do votante
     */
-    function pesquisarVotantePorIndice(uint indiceVotante) public view returns (address, uint, string) {
+    function pesquisarVotantePorIndice(uint indiceVotante) public view returns (address, uint, string memory) {
         require(indiceVotante <= numeroVotantes.length, "Indice informado é maior que o numero de votantes");
         Votante memory votanteTemporario = numeroVotantes[indiceVotante];
         if (votanteTemporario.existe == true) {
             return (votanteTemporario.conta, votanteTemporario.quotaDeVotos, votanteTemporario.identificationID);
         } else {
-            return (0,0,"");
+            string memory none = "";
+            return (address(0), 0, none);
         }
     }
 
@@ -163,12 +165,13 @@ contract VotacaoAssembleia {
     @return Número de votos (ou percentual de ações/participações) de apoio recebido
     @return Número de votos (ou percentual de ações/participações) de apoio mínimo que a proposta necessita para ser aprovada
     */
-    function pesquisarProposta(uint numeroProposta) public view returns (uint, string, address, uint, uint)  {
+    function pesquisarProposta(uint numeroProposta) public view returns (uint, string memory, address, uint, uint)  {
         Proposta memory propostaTemporario = propostas[numeroProposta];
         if (propostaTemporario.existe) {
             return (numeroProposta, propostaTemporario.texto, propostaTemporario.proponente, propostaTemporario.quotaDeVotos, propostaTemporario.quotaMinimaParaAprovacao);
         } else {
-            return (0, "", 0, 0, 0);
+            string memory none = "";
+            return (0, none, address(0), 0, 0);
         }
     }
 
@@ -192,7 +195,7 @@ contract VotacaoAssembleia {
     @notice Qual o motivo razão da Assembléia ter sido convocada
     @return Texto que explica o motivo razão da Assembléia ter sido convocada
     */
-    function qualMotivoDaConvocatoria() public view returns (string) {
+    function qualMotivoDaConvocatoria() public view returns (string memory) {
         return motivoConvocatoria;
     }
 
@@ -228,7 +231,7 @@ contract VotacaoAssembleia {
     @return Total de propostas enviadas para apreciação
     @return Total de votantes aptos a votar
     */
-    function detalhesAssembleia() public view returns(address, address, string, uint, uint, uint, uint) {
+    function detalhesAssembleia() public view returns(address, address, string memory, uint, uint, uint, uint) {
         uint tPropostas = totalDePropostas();
         uint tVotantes = totalDeVotantes();
         return (presidente, secretario, motivoConvocatoria, dataInicioVotacao, dataFimVotacao, tPropostas, tVotantes);
